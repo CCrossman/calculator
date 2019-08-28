@@ -30,11 +30,11 @@ public final class Calculator2 {
 		pushPreviousResult(result);
 
 		try (Scanner scanner = new Scanner(expression)) {
-			int value = scanner.nextInt();
+			double value = scanner.nextDouble();
 
 			while (scanner.hasNext()) {
 				String operator = scanner.next(ptnOperator);
-				int operand = scanner.nextInt();
+				double operand = scanner.nextDouble();
 
 				switch (operator) {
 					case "+":
@@ -91,14 +91,16 @@ public final class Calculator2 {
 		shouldEqual("invalid expression: / 1", calculator2.calculateAndGetResult("/ 1"));
 		shouldEqual("invalid expression: 9 +", calculator2.calculateAndGetResult("9 +"));
 		shouldEqual("cannot divide by zero", calculator2.calculateAndGetResult("9 / 0"));
-		shouldEqual("10", calculator2.calculateAndGetResult("9 + 1"));
-		shouldEqual("-6", calculator2.calculateAndGetResult("1 - 7"));
-		shouldEqual("64", calculator2.calculateAndGetResult("8 * 8"));
-		shouldEqual("4", calculator2.calculateAndGetResult("12 / 3"));
+		shouldEqual("10.0", calculator2.calculateAndGetResult("9 + 1"));
+		shouldEqual("-6.0", calculator2.calculateAndGetResult("1 - 7"));
+		shouldEqual("64.0", calculator2.calculateAndGetResult("8 * 8"));
+		shouldEqual("4.0", calculator2.calculateAndGetResult("12 / 3"));
 
 		calculator2.clear();
-		shouldEqual("2", calculator2.calculateAndGetResult("5 + 1 * 3 / 6 - 1"));
-		shouldEqual("5", calculator2.calculateAndGetResult("1 + 2 + 3 - 1"));
-		shouldEqual("2", calculator2.getPreviousResult(1));
+		shouldEqual("2.0", calculator2.calculateAndGetResult("5 + 1 * 3 / 6 - 1"));
+		shouldEqual("5.0", calculator2.calculateAndGetResult("1 + 2 + 3 - 1"));
+		shouldEqual("2.0", calculator2.getPreviousResult(1));
+
+		shouldEqual("3.75", calculator2.calculateAndGetResult("15 / 4"));
 	}
 }

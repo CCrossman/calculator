@@ -5,6 +5,8 @@ public class Launcher implements View.Listener {
 	private View view;
 
 	private String expression = "";
+	private String operator = "";
+	private String operand = "";
 
 	public static void main(String[] args) {
 		Launcher launcher = new Launcher();
@@ -27,29 +29,59 @@ public class Launcher implements View.Listener {
 	}
 
 	@Override
-	public void numberPushed(int value) {
-		if ("".equals(expression)) {
-			expression = String.valueOf(value);
+	public void pointPushed() {
+		if ("".equals(operator)) {
+			if ("".equals(expression)) {
+				expression = "0.";
+			} else {
+				expression = expression + ".";
+			}
 			view.displayValue(expression);
 		} else {
-			calculator.calculate(expression + " " + value);
-			expression = calculator.getResult();
+			if ("".equals(operand)) {
+				operand = operand + "0.";
+			} else {
+				operand = operand + ".";
+			}
+			view.displayValue(operand);
+		}
+	}
+
+	@Override
+	public void numberPushed(int value) {
+		if ("".equals(operator)) {
+			expression = expression + value;
 			view.displayValue(expression);
+		} else {
+			operand = operand + value;
+			view.displayValue(operand);
 		}
 	}
 
 	@Override
 	public void operatorPushed(String operator) {
-		if ("".equals(expression)) {
-			expression = operator;
+		if ("".equals(this.operator)) {
+			this.operator = operator;
 		} else {
-			expression = expression + " " + operator;
+			evaluate();
+			this.operator = operator;
 		}
 	}
 
 	@Override
 	public void reset() {
 		expression = "";
+		operator = "";
+		operand = "";
 		view.displayValue("");
+	}
+
+	@Override
+	public void evaluate() {
+		calculator.calculate(expression + " " + operator + " " + operand);
+		expression = calculator.getResult();
+		view.displayValue(expression);
+		operator = "";
+		operand = "";
 	}
 }

@@ -20,6 +20,7 @@ public class View {
 		// create display for the numbers
 		display = new JTextField(18);
 		display.setEditable(false);
+		display.setBackground(Color.white);
 
 		// create number buttons
 		JButton[] numberButtons = new JButton[10];
@@ -76,6 +77,16 @@ public class View {
 			}
 		});
 
+		JButton btnEqual = new JButton("=");
+		btnEqual.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				for (Listener listener : listeners) {
+					listener.evaluate();
+				}
+			}
+		});
+
 		JButton btnReset = new JButton("RESET");
 		btnReset.addActionListener(new ActionListener() {
 			@Override
@@ -86,22 +97,60 @@ public class View {
 			}
 		});
 
+		JButton btnPoint = new JButton(".");
+		btnPoint.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				for (Listener listener : listeners) {
+					listener.pointPushed();
+				}
+			}
+		});
+
 		// create a panel and add elements to it
 		JPanel panel = new JPanel();
-		panel.add(display);
+		panel.setLayout(new BorderLayout());
 
-		for (JButton button : numberButtons) {
-			panel.add(button);
-		}
-		panel.add(btnAdd);
-		panel.add(btnSubtract);
-		panel.add(btnMultiply);
-		panel.add(btnDivide);
-		panel.add(btnReset);
+		JPanel centerPanel = new JPanel();
+		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.PAGE_AXIS));
+		centerPanel.add(Box.createVerticalBox());
 
-		panel.setBackground(Color.gray);
+		JPanel row1 = new JPanel();
+		row1.add(numberButtons[1]);
+		row1.add(numberButtons[2]);
+		row1.add(numberButtons[3]);
+		centerPanel.add(row1);
+
+		JPanel row2 = new JPanel();
+		row2.add(numberButtons[4]);
+		row2.add(numberButtons[5]);
+		row2.add(numberButtons[6]);
+		centerPanel.add(row2);
+
+		JPanel row3 = new JPanel();
+		row3.add(numberButtons[7]);
+		row3.add(numberButtons[8]);
+		row3.add(numberButtons[9]);
+		centerPanel.add(row3);
+
+		JPanel row4 = new JPanel();
+		row4.add(btnPoint);
+		row4.add(numberButtons[0]);
+		row4.add(btnEqual);
+		centerPanel.add(row4);
+
+		JPanel southPanel = new JPanel();
+		southPanel.add(btnAdd);
+		southPanel.add(btnSubtract);
+		southPanel.add(btnMultiply);
+		southPanel.add(btnDivide);
+		southPanel.add(btnReset);
+
+		panel.add(display, BorderLayout.NORTH);
+		panel.add(centerPanel, BorderLayout.CENTER);
+		panel.add(southPanel, BorderLayout.SOUTH);
+
 		frame.add(panel);
-		//setSize(200, 220);
 		frame.pack();
 		frame.setResizable(false);
 	}
@@ -119,8 +168,10 @@ public class View {
 	}
 
 	public static interface Listener {
+		public void pointPushed();
 		public void numberPushed(int value);
 		public void operatorPushed(String operator);
 		public void reset();
+		public void evaluate();
 	}
 }
