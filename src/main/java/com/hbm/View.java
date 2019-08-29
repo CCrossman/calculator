@@ -36,7 +36,8 @@ public class View {
 		JButton btnMultiply = newButton("*", listener -> listener.operatorPushed("*"));
 		JButton btnDivide = newButton("/", listener -> listener.operatorPushed("/"));
 		JButton btnEqual = newButton("=", Listener::evaluate);
-		JButton btnReset = newButton("RESET", Listener::reset);
+		JButton btnReset = newButton("CLEAR", Listener::clear);
+		JButton btnClear = newButton("RESET", Listener::reset);
 		JButton btnPoint = newButton(".", Listener::pointPushed);
 
 		// create a panel and add elements to it
@@ -47,7 +48,9 @@ public class View {
 		centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.PAGE_AXIS));
 		centerPanel.add(Box.createVerticalBox());
 
-		JPanel row1 = new JPanel();
+		JPanel row1 = new JPanel(new GridLayout(1,7));
+		row1.add(newButton("SQUARE", Listener::instantSquare));
+		row1.add(Box.createHorizontalStrut(20));
 		row1.add(numberButtons[1]);
 		row1.add(numberButtons[2]);
 		row1.add(numberButtons[3]);
@@ -55,7 +58,9 @@ public class View {
 		row1.add(btnAdd);
 		centerPanel.add(row1);
 
-		JPanel row2 = new JPanel();
+		JPanel row2 = new JPanel(new GridLayout(1,7));
+		row2.add(newButton("NEGATE", Listener::instantNegate));
+		row2.add(Box.createHorizontalStrut(20));
 		row2.add(numberButtons[4]);
 		row2.add(numberButtons[5]);
 		row2.add(numberButtons[6]);
@@ -63,7 +68,9 @@ public class View {
 		row2.add(btnSubtract);
 		centerPanel.add(row2);
 
-		JPanel row3 = new JPanel();
+		JPanel row3 = new JPanel(new GridLayout(1,7));
+		row3.add(newButton("INVERT", Listener::instantInvert));
+		row3.add(Box.createHorizontalStrut(20));
 		row3.add(numberButtons[7]);
 		row3.add(numberButtons[8]);
 		row3.add(numberButtons[9]);
@@ -71,7 +78,9 @@ public class View {
 		row3.add(btnMultiply);
 		centerPanel.add(row3);
 
-		JPanel row4 = new JPanel();
+		JPanel row4 = new JPanel(new GridLayout(1,7));
+		row4.add(newButton("DELETE", Listener::backspace));
+		row4.add(Box.createHorizontalStrut(20));
 		row4.add(btnPoint);
 		row4.add(numberButtons[0]);
 		row4.add(btnEqual);
@@ -90,6 +99,7 @@ public class View {
 			unmarkRecall(i);
 		}
 		southPanel.add(btnReset);
+		southPanel.add(btnClear);
 
 		panel.add(display, BorderLayout.NORTH);
 		panel.add(centerPanel, BorderLayout.CENTER);
@@ -139,8 +149,14 @@ public class View {
 		public void pointPushed();
 		public void numberPushed(int value);
 		public void operatorPushed(String operator);
-		public void reset();
+		public void clear();
 		public void evaluate();
 		public void recall(int index);
+		public void reset();
+
+		public void instantSquare();
+		public void instantNegate();
+		public void instantInvert();
+		public void backspace();
 	}
 }

@@ -35,6 +35,11 @@ public final class Calculator2 {
 		this.result = "";
 	}
 
+	public void forgetPreviousResults() {
+		numPreviousResults = 0;
+		Arrays.fill(results,null);
+	}
+
 	private static final Pattern ptnOperator = Pattern.compile("[\\+\\-\\*\\/]");
 
 	public void calculate(String expression) {
@@ -58,7 +63,7 @@ public final class Calculator2 {
 						value = value.multiply(operand);
 						break;
 					case "/":
-						if (BigDecimal.ZERO.equals(operand)) {
+						if (BigDecimal.ZERO.equals(operand.stripTrailingZeros())) {
 							this.result = "cannot divide by zero";
 							return;
 						}
@@ -91,26 +96,21 @@ public final class Calculator2 {
 		}
 	}
 
-	private void clear() {
-		numPreviousResults = 0;
-		Arrays.fill(results,null);
-	}
-
 	public static void main(String[] args) {
 		final Calculator2 calculator2 = new Calculator2();
 		shouldEqual("invalid expression: + 1", calculator2.calculateAndGetResult("+ 1"));
 		shouldEqual("invalid expression: / 1", calculator2.calculateAndGetResult("/ 1"));
 		shouldEqual("invalid expression: 9 +", calculator2.calculateAndGetResult("9 +"));
 		shouldEqual("cannot divide by zero", calculator2.calculateAndGetResult("9 / 0"));
-		shouldEqual("10.0", calculator2.calculateAndGetResult("9 + 1"));
-		shouldEqual("-6.0", calculator2.calculateAndGetResult("1 - 7"));
-		shouldEqual("64.0", calculator2.calculateAndGetResult("8 * 8"));
-		shouldEqual("4.0", calculator2.calculateAndGetResult("12 / 3"));
+		shouldEqual("10", calculator2.calculateAndGetResult("9 + 1"));
+		shouldEqual("-6", calculator2.calculateAndGetResult("1 - 7"));
+		shouldEqual("64", calculator2.calculateAndGetResult("8 * 8"));
+		shouldEqual("4", calculator2.calculateAndGetResult("12 / 3"));
 
-		calculator2.clear();
-		shouldEqual("2.0", calculator2.calculateAndGetResult("5 + 1 * 3 / 6 - 1"));
-		shouldEqual("5.0", calculator2.calculateAndGetResult("1 + 2 + 3 - 1"));
-		shouldEqual("2.0", calculator2.getPreviousResult(1));
+		calculator2.forgetPreviousResults();
+		shouldEqual("2", calculator2.calculateAndGetResult("5 + 1 * 3 / 6 - 1"));
+		shouldEqual("5", calculator2.calculateAndGetResult("1 + 2 + 3 - 1"));
+		shouldEqual("2", calculator2.getPreviousResult(1));
 
 		shouldEqual("3.75", calculator2.calculateAndGetResult("15 / 4"));
 	}
