@@ -1,5 +1,7 @@
 package com.hbm;
 
+import java.util.Optional;
+
 public class Launcher implements View.Listener {
 	private Calculator2 calculator;
 	private View view;
@@ -45,6 +47,7 @@ public class Launcher implements View.Listener {
 			}
 			view.displayValue(operand);
 		}
+		refresh();
 	}
 
 	@Override
@@ -56,6 +59,7 @@ public class Launcher implements View.Listener {
 			operand = operand + value;
 			view.displayValue(operand);
 		}
+		refresh();
 	}
 
 	@Override
@@ -66,6 +70,7 @@ public class Launcher implements View.Listener {
 			evaluate();
 			this.operator = operator;
 		}
+		refresh();
 	}
 
 	@Override
@@ -74,6 +79,7 @@ public class Launcher implements View.Listener {
 		operator = "";
 		operand = "";
 		view.displayValue("");
+		refresh();
 	}
 
 	@Override
@@ -83,5 +89,27 @@ public class Launcher implements View.Listener {
 		view.displayValue(expression);
 		operator = "";
 		operand = "";
+		calculator.rememberCurrentResult();
+		refresh();
+	}
+
+	@Override
+	public void recall(int index) {
+		if ("".equals(operator)) {
+			expression = Optional.ofNullable(calculator.getPreviousResult(index)).orElse("");
+			view.displayValue(expression);
+		} else {
+			operand = Optional.ofNullable(calculator.getPreviousResult(index)).orElse("");
+			view.displayValue(operand);
+		}
+	}
+
+	private void refresh() {
+		for (int i = 1; i <= calculator.getNumPreviousResults(); ++i) {
+			view.markRecall(i - 1, calculator.getPreviousResult(i));
+		}
+		for (int i = 1 + calculator.getNumPreviousResults(); i <= 10; ++i) {
+			view.unmarkRecall(i - 1);
+		}
 	}
 }

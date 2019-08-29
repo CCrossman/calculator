@@ -1,5 +1,7 @@
 package com.hbm;
 
+import java.math.BigDecimal;
+import java.math.MathContext;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -24,34 +26,43 @@ public final class Calculator2 {
 		return results[numPreviousResults - index];
 	}
 
+	public int getNumPreviousResults() {
+		return numPreviousResults;
+	}
+
+	public void rememberCurrentResult() {
+		pushPreviousResult(result);
+		this.result = "";
+	}
+
 	private static final Pattern ptnOperator = Pattern.compile("[\\+\\-\\*\\/]");
 
 	public void calculate(String expression) {
 		pushPreviousResult(result);
 
 		try (Scanner scanner = new Scanner(expression)) {
-			double value = scanner.nextDouble();
+			BigDecimal value = scanner.nextBigDecimal();
 
 			while (scanner.hasNext()) {
 				String operator = scanner.next(ptnOperator);
-				double operand = scanner.nextDouble();
+				BigDecimal operand = scanner.nextBigDecimal();
 
 				switch (operator) {
 					case "+":
-						value = value + operand;
+						value = value.add(operand);
 						break;
 					case "-":
-						value = value - operand;
+						value = value.subtract(operand);
 						break;
 					case "*":
-						value = value * operand;
+						value = value.multiply(operand);
 						break;
 					case "/":
-						if (operand == 0) {
+						if (BigDecimal.ZERO.equals(operand)) {
 							this.result = "cannot divide by zero";
 							return;
 						}
-						value = value / operand;
+						value = value.divide(operand, MathContext.DECIMAL32);
 						break;
 				}
 			}
@@ -71,7 +82,7 @@ public final class Calculator2 {
 	}
 
 	private void pushPreviousResult(String result) {
-		if (result != null) {
+		if (result != null && !"".equals(result)) {
 			if (numPreviousResults == 10) {
 				System.arraycopy(results, 1, results, 0, 9);
 				numPreviousResults--;
