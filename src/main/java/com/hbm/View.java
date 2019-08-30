@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -18,6 +19,10 @@ public class View {
 	public View() {
 		this.frame = new JFrame("Calculator");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+		URL iconURL = getClass().getResource("/cantaloupe.png");
+		ImageIcon icon = new ImageIcon(iconURL);
+		frame.setIconImage(icon.getImage());
 
 		// create display for the numbers
 		display = new JTextField(18);
